@@ -57,17 +57,17 @@ var Tools = function(){
         console.log(data);
         try{
             var d = JSON.parse(data);
-            d = d[0];
             if(d.err === "0"){
                 if(typeof fun === "function"){
-                    fun(d);
+                    fun(d.obj);
                 }
             }
             else{
                 if(typeof funb === "function"){
-                    funb(d);
+                    funb(d.obj);
+                }else{
+                    tools.msg.msg(d.msg);
                 }
-                tools.msg.msg(d.msg);
             }
         }
         catch(e){

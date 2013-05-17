@@ -72,7 +72,6 @@ var Submits = function(){
         console.log(data);
         try{
             var d = JSON.parse(data);
-            d = d[0];
             if(d.err === "0"){
                 fun(d.form);
             }

@@ -47,25 +47,14 @@ var Administrador = function(){
     this.getAdministradores = function(){
         var me = this;
         $.ajax({data:{o:3,m:1}}).done(function(data){
-            try{
-                var dato = JSON.parse(data);
-                var toGive = [{
-                    "0" : dato[1],
-                    "err" : dato[0][0].err
-                }];
-                var fun = function(d){
-                    d = d[0];
-                    me.administradores = new Array();
-                    for(var x in d){
-                        me.administradores.push(d[x]);
-                    }
-                    me.printTable();
-                };
-                tools.ajaxDone(JSON.stringify(toGive), fun);
-            }catch(e){
-                console.log(e);
-                tools.msg.errIne();
-            }
+            var fun = function(d){
+                me.administradores = new Array();
+                for(var x in d){
+                    me.administradores.push(d[x]);
+                }
+                me.printTable();
+            };
+            tools.ajaxDone(data, fun);
         }).fail(tools.ajaxFail);
     };
     this.fNuevoAdmin = function(){
@@ -85,9 +74,8 @@ var Administrador = function(){
                 }}).done(function(data){
                 var fun = function(d){
                     $(c.v.i4).modal("hide");
-                    d = d.obj[0];
                     tools.pnotify.bottomright("Correcto", "El administrador se ha creado correctamente.", "success");
-                    me.includeAdmin(d);
+                    me.includeAdmin(d[0]);
                 };
                 tools.ajaxDone(data, fun);
             }).fail(tools.ajaxFail);

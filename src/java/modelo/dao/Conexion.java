@@ -60,6 +60,10 @@ public class Conexion {
                     for(int x = 0; x < largo; x++){
                         map.put(String.valueOf(x), rs.getString(x+1));
                         map.put(columns[x], rs.getString(x+1));
+                        if(rs.wasNull()){
+                            map.put(String.valueOf(x), "NULL");
+                            map.put(columns[x], "NULL");
+                        }
                     }
                     ret.add(map);
                 } while (rs.next());
@@ -84,8 +88,8 @@ public class Conexion {
     public void s(String query, boolean cierra){
         this.lastId = 0;
         try{
-            ps = con.prepareStatement(query);
-            ps.executeUpdate();
+            ps = con.prepareStatement(query, ps.RETURN_GENERATED_KEYS);
+            this.lastId = ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()){
                 this.lastId = rs.getInt(1);

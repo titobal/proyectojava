@@ -7,10 +7,6 @@ package control;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -70,21 +66,21 @@ public class loginadmin extends HttpServlet {
                         break;
                         case 2:
                             if(request.getParameter("correo") != null){
-                                out.println(gson.toJson(ad.guardaCodigo(request.getParameter("correo").toLowerCase(), Tools.genCode(30))));
+                                out.println(gson.toJson(ad.guardaCodigo(request.getParameter("correo").toLowerCase(), Tools.genCode(30)).get(0)));
                             }else{
                                 out.println(gson.toJson(msg.peticionErronea()));
                             }
                         break;
                         case 3:
                             if(request.getParameter("c") != null){
-                                out.println(gson.toJson(ad.compCode(request.getParameter("c"))));
+                                out.println(gson.toJson(ad.compCode(request.getParameter("c")).get(0)));
                             }else{
                                 out.println(gson.toJson(msg.peticionErronea()));
                             }
                         break;
                         case 4:
                             if(request.getParameter("code") != null && request.getParameter("pass") != null){
-                                out.println(gson.toJson(ad.newPassword(request.getParameter("code"), request.getParameter("pass"))));
+                                out.println(gson.toJson(ad.newPassword(request.getParameter("code"), request.getParameter("pass")).get(0)));
                             }else{
                                 out.println(gson.toJson(msg.peticionErronea()));
                             }

@@ -5,14 +5,8 @@
 package control;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -49,13 +43,12 @@ public class paneladmin extends HttpServlet {
                             if(request.getParameter("m")!= null){
                                 switch(Integer.parseInt(request.getParameter("m"))){
                                     case 1:
-                                        //JsonArray
-                                        //out.println(gson.toJson(Tools.returnOkPlusObject(ad.getAdministradores())));
+                                        out.println(gson.toJson(new OutPut("0","ok",ad.getAdministradores())));
                                     break;
                                     case 2:
                                         if(request.getParameter("correo") != null && request.getParameter("nivel") != null){
-                                            out.println(gson.toJson(Tools.returnOkPlusObject(ad.nuevoAdministrador(
-                                                    new Administrador(request.getParameter("correo"), Integer.parseInt(request.getParameter("nivel")))))));
+                                            out.println(ad.nuevoAdministrador(
+                                                    new Administrador(request.getParameter("correo"), Integer.parseInt(request.getParameter("nivel")))));
                                         }else{
                                             out.println(gson.toJson(msg.sinValores()));
                                         }

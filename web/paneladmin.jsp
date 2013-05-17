@@ -3,6 +3,7 @@
     Created on : 12-05-2013, 11:50:00 PM
     Author     : cristobal
 --%>
+<%@page import="java.util.Map"%>
 <%@page import="modelo.dao.AdministradorDAOImpl"%>
 <%@page import="modelo.dao.AdministradorDAO"%>
 <%@page import="modelo.bean.Administrador"%>
@@ -11,7 +12,10 @@
         response.sendRedirect("loginadmin.jsp");
     }
     AdministradorDAO ad = new AdministradorDAOImpl();
-    Administrador a = ad.getAdministrador(session.getAttribute("admin").toString());
+    Map<String, String> m = ad.getAdministrador(session.getAttribute("admin").toString());
+    Administrador a = new Administrador(Integer.parseInt(m.get("Id")), m.get("Correo"), m.get("UltimaSesion"),
+            (m.get("Estado")) == "1" ? true : false, Integer.parseInt(m.get("Nivel")));
+    /*int id, String correo, String ultimaSesion, boolean estado, int nivel*/
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>

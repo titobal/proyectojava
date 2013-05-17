@@ -23,7 +23,7 @@ public interface AdministradorDAO {
     
     public boolean iniciaSesion(Administrador a);
     
-    public List<Map<String, String>> nuevoAdministrador(Administrador a);
+    public String nuevoAdministrador(Administrador a);
     
     public List<Map<String, String>> getNivel(int id);
     
@@ -35,9 +35,9 @@ public interface AdministradorDAO {
     
     public int getCountAdministradorPorCorreo(String correo);
     
-    public Administrador getAdministrador(String correo);
+    public Map<String, String> getAdministrador(String correo);
     
-    public Administrador getAdministrador(int id);
+    public Map<String, String> getAdministrador(int id);
     
     public List<Map<String, String>> getAdministradores();
 }

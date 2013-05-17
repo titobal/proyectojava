@@ -4,7 +4,9 @@
  */
 package modelo.dao;
 
+import com.google.gson.Gson;
 import control.Mensaje;
+import control.OutPut;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
     Conexion q = new Conexion();
     Mensaje m = new Mensaje();
+    Gson gson = new Gson();
     
     @Override
     public List<Map<String, String>> updateAttr(int id, int m) {
@@ -33,12 +36,15 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             if(ret.size() == 1){
                 this.q.s("DELETE FROM CodigoRecuperacion WHERE Objeto = 0 AND Id = "+ret.get(0).get("Id")+";", false);
                 this.q.s("INSERT INTO CodigoRecuperacion VALUES ('"+codigo+"',sysdate(),"+ret.get(0).get("Id")+",0);", true);
-                return m.ok();
+                ret.add(this.m.ok());
+                return ret;
             }else{
-                return m.errorInesperado();
+                ret.add(m.errorInesperado());
+                return ret;
             }
         }else{
-            return m.msg("Parece que el correo no est&aacute; registrado en la base de datos."); 
+            ret.add(m.msg("Parece que el correo no est&aacute; registrado en la base de datos."));
+            return ret;
         }
     }
 
@@ -47,10 +53,12 @@ public class AdministradorDAOImpl implements AdministradorDAO{
         ret = this.q.q("SELECT * FROM CodigoRecuperacion WHERE Codigo = '"+code+"' AND Objeto = 0;", new String[]{"Codigo","Fecha","Id","Objeto"}, false);
         if(ret.size() == 1){
             this.q.s("UPDATE Administrador SET Contrasena = '"+pass+"' WHERE Id = "+ret.get(0).get("Id")+";", true);
-            return this.m.ok();
+            ret.add(this.m.ok());
+            return ret;
         }else{
             this.q.cierra();
-            return m.msg("Al parecer el c&oacute;digo no es v&aacute;lido.");
+            ret.add(m.msg("Al parecer el c&oacute;digo no es v&aacute;lido."));
+            return ret;
         }
     }
 
@@ -64,7 +72,8 @@ public class AdministradorDAOImpl implements AdministradorDAO{
             return ret;
         }else{
             this.q.cierra();
-            return m.msg("El c&oacute;digo ingresado no es v&aacute;lido, puede solicitar uno nuevo");
+            ret.add(m.msg("El c&oacute;digo ingresado no es v&aacute;lido, puede solicitar uno nuevo"));
+            return ret;
         }      
     }
 
@@ -80,12 +89,13 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     }
 
     @Override
-    public List<Map<String, String>> nuevoAdministrador(Administrador a) {
+    public String nuevoAdministrador(Administrador a) {
         if(this.getCountAdministradorPorCorreo(a.getCorreo()) == 0){
             this.q.s("INSERT INTO Administrador VALUES (NULL, 1, "+String.valueOf(a.getNivel())+", '"+a.getCorreo()+"', NULL, 'no tiene');", false);
-            return this.getAdministrador(this.q.getLastId()).toListMap();
+            ret.add(this.getAdministrador(this.q.getLastId()));
+            return gson.toJson(new OutPut("0","ok",ret));
         }else{
-            return m.msg("Ya existe un administrador registrador con este correo.");
+            return gson.toJson(new OutPut("1","Ya existe un administrador registrado con este correo."));
         }
     }
 
@@ -120,15 +130,15 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     }
 
     @Override
-    public Administrador getAdministrador(String correo) {
+    public Map<String, String> getAdministrador(String correo) {
         map.putAll(this.q.q("SELECT * FROM Administrador WHERE Correo = '"+correo+"';", Administrador.getArrayAttributes(), true).get(0));
-        return new Administrador(Integer.parseInt(map.get("Id")),map.get("Correo"),map.get("UltimaSesion"),(map.get("Estado")=="1"?true:false),Integer.parseInt(map.get("Nivel")));
+        return map;
     }
     
     @Override
-    public Administrador getAdministrador(int id){
+    public Map<String, String> getAdministrador(int id){
         map.putAll(this.q.q("SELECT * FROM Administrador WHERE Id = '"+String.valueOf(id)+"';", Administrador.getArrayAttributes(), true).get(0));
-        return new Administrador(Integer.parseInt(map.get("Id")),map.get("Correo"),map.get("UltimaSesion"),(map.get("Estado")=="1"?true:false),Integer.parseInt(map.get("Nivel")));
+        return map;
     }       
 
     @Override
