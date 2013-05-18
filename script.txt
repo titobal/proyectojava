@@ -1,0 +1,120 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `ProyectoJava` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `ProyectoJava` ;
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`Administrador`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`Administrador` (
+  `Correo` VARCHAR(360) NOT NULL ,
+  `Contrasena` VARCHAR(55) NOT NULL ,
+  `Estado` TINYINT(1) NOT NULL ,
+  `Nivel` INT NOT NULL ,
+  `UltimaSesion` DATETIME NULL ,
+  PRIMARY KEY (`Correo`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`CodigoRecuperacion`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`CodigoRecuperacion` (
+  `Codigo` VARCHAR(30) NOT NULL ,
+  `Fecha` DATETIME NOT NULL ,
+  `Administrador` VARCHAR(360) NOT NULL ,
+  PRIMARY KEY (`Codigo`) ,
+  INDEX `CodigoDeAdministrador_idx` (`Administrador` ASC) ,
+  CONSTRAINT `CodigoDeAdministrador`
+    FOREIGN KEY (`Administrador` )
+    REFERENCES `ProyectoJava`.`Administrador` (`Correo` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`Categoria`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`Categoria` (
+  `Id` INT NOT NULL AUTO_INCREMENT ,
+  `Nombre` VARCHAR(100) NOT NULL ,
+  `Categoria` INT NULL ,
+  `Estado` TINYINT(1) NOT NULL ,
+  PRIMARY KEY (`Id`) ,
+  INDEX `CategoriaDeCategoria_idx` (`Categoria` ASC) ,
+  CONSTRAINT `CategoriaDeCategoria`
+    FOREIGN KEY (`Categoria` )
+    REFERENCES `ProyectoJava`.`Categoria` (`Id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`Producto`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`Producto` (
+  `Id` INT NOT NULL AUTO_INCREMENT ,
+  `Nombre` VARCHAR(100) NOT NULL ,
+  `Descripcion` VARCHAR(5000) NOT NULL ,
+  `Precio` DOUBLE NOT NULL ,
+  `Stock` INT NOT NULL ,
+  `Estado` TINYINT(1) NOT NULL ,
+  `Categoria` INT NOT NULL ,
+  PRIMARY KEY (`Id`) ,
+  INDEX `CategoriaDeProducto_idx` (`Categoria` ASC) ,
+  CONSTRAINT `CategoriaDeProducto`
+    FOREIGN KEY (`Categoria` )
+    REFERENCES `ProyectoJava`.`Categoria` (`Id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`Venta`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`Venta` (
+  `Codigo` INT NOT NULL AUTO_INCREMENT ,
+  `Fecha` DATETIME NOT NULL ,
+  `Correo` VARCHAR(360) NOT NULL ,
+  `Comuna` INT NOT NULL ,
+  `Calle` VARCHAR(150) NOT NULL ,
+  `Numero` INT(6) NOT NULL ,
+  `Nombre` VARCHAR(45) NOT NULL ,
+  `ApellidoP` VARCHAR(45) NOT NULL ,
+  `ApellidoM` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`Codigo`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ProyectoJava`.`ProductoDeVenta`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `ProyectoJava`.`ProductoDeVenta` (
+  `Venta` INT NOT NULL ,
+  `Producto` INT NOT NULL ,
+  `Cantidad` INT NOT NULL ,
+  `Valor` DOUBLE NOT NULL ,
+  INDEX `ProductoDeVentaVenta_idx` (`Venta` ASC) ,
+  INDEX `ProductoDeVentaProducto_idx` (`Producto` ASC) ,
+  CONSTRAINT `ProductoDeVentaVenta`
+    FOREIGN KEY (`Venta` )
+    REFERENCES `ProyectoJava`.`Venta` (`Codigo` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `ProductoDeVentaProducto`
+    FOREIGN KEY (`Producto` )
+    REFERENCES `ProyectoJava`.`Producto` (`Id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

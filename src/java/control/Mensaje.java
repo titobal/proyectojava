@@ -36,7 +36,7 @@ public class Mensaje {
     
     public Map<String, String> usuarioIncorrecto(){
         map.put("err", "1");
-        map.put("msg", "Usuairo o contrase&ntilde;a incorrectos.");
+        map.put("msg", "Usuario o contrase&ntilde;a incorrectos.");
         return map;
     }
     

@@ -13,9 +13,9 @@
     }
     AdministradorDAO ad = new AdministradorDAOImpl();
     Map<String, String> m = ad.getAdministrador(session.getAttribute("admin").toString());
-    Administrador a = new Administrador(Integer.parseInt(m.get("Id")), m.get("Correo"), m.get("UltimaSesion"),
+    Administrador a = new Administrador(m.get("Correo"), m.get("UltimaSesion"),
             (m.get("Estado")) == "1" ? true : false, Integer.parseInt(m.get("Nivel")));
-    /*int id, String correo, String ultimaSesion, boolean estado, int nivel*/
+    //Administrador a = new Administrador("asd","12-12-12 12:12:12",true,0);
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
@@ -100,7 +100,6 @@
                         <table class="table table-striped table-bordered table-hover table-condensed">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Correo</th>
                                     <th>Nivel</th>
                                     <th>Ultima Sesión</th>

@@ -34,9 +34,10 @@ public class AdministradorDAOImpl implements AdministradorDAO{
         if(this.getCountAdministradorPorCorreo(correo) == 1){
             ret = this.q.q("SELECT * FROM Administrador WHERE Correo = '"+correo+"';", Administrador.getArrayAttributes(), false);
             if(ret.size() == 1){
-                this.q.s("DELETE FROM CodigoRecuperacion WHERE Objeto = 0 AND Id = "+ret.get(0).get("Id")+";", false);
-                this.q.s("INSERT INTO CodigoRecuperacion VALUES ('"+codigo+"',sysdate(),"+ret.get(0).get("Id")+",0);", true);
-                ret.add(this.m.ok());
+                this.q.s("DELETE FROM CodigoRecuperacion WHERE Administrador = '"+ret.get(0).get("Correo")+"';", false);
+                this.q.s("INSERT INTO CodigoRecuperacion VALUES ('"+codigo+"',sysdate(),'"+ret.get(0).get("Correo")+"');", true);
+                ret = new ArrayList<Map<String, String>>();
+                ret.add(m.msg("Se le ha enviado un correo con el c&oacute;digo de recuperaci&oacute;n.<br/>"+codigo));
                 return ret;
             }else{
                 ret.add(m.errorInesperado());
@@ -50,13 +51,16 @@ public class AdministradorDAOImpl implements AdministradorDAO{
 
     @Override
     public List<Map<String, String>> newPassword(String code, String pass) {
-        ret = this.q.q("SELECT * FROM CodigoRecuperacion WHERE Codigo = '"+code+"' AND Objeto = 0;", new String[]{"Codigo","Fecha","Id","Objeto"}, false);
+        ret = this.q.q("SELECT * FROM CodigoRecuperacion WHERE Codigo = '"+code+"';", new String[]{"Codigo","Fecha","Administrador"}, false);
         if(ret.size() == 1){
-            this.q.s("UPDATE Administrador SET Contrasena = '"+pass+"' WHERE Id = "+ret.get(0).get("Id")+";", true);
+            this.q.s("UPDATE Administrador SET Contrasena = '"+pass+"' WHERE Correo = '"+ret.get(0).get("Administrador")+"';", false);
+            this.q.s("DELETE FROM CodigoRecuperacion WHERE Administrador = '"+ret.get(0).get("Administrador")+"';", true);
+            ret = new ArrayList<Map<String, String>>();
             ret.add(this.m.ok());
             return ret;
         }else{
             this.q.cierra();
+            ret = new ArrayList<Map<String, String>>();
             ret.add(m.msg("Al parecer el c&oacute;digo no es v&aacute;lido."));
             return ret;
         }
@@ -91,8 +95,8 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public String nuevoAdministrador(Administrador a) {
         if(this.getCountAdministradorPorCorreo(a.getCorreo()) == 0){
-            this.q.s("INSERT INTO Administrador VALUES (NULL, 1, "+String.valueOf(a.getNivel())+", '"+a.getCorreo()+"', NULL, 'no tiene');", false);
-            ret.add(this.getAdministrador(this.q.getLastId()));
+            this.q.s("INSERT INTO Administrador VALUES ('"+a.getCorreo()+"', 'no tiene', 1, "+String.valueOf(a.getNivel())+", NULL);", false);
+            ret.add(this.getAdministrador(a.getCorreo()));
             return gson.toJson(new OutPut("0","ok",ret));
         }else{
             return gson.toJson(new OutPut("1","Ya existe un administrador registrado con este correo."));
@@ -116,7 +120,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
 
     @Override
     public boolean intentaIniciarSesion(String correo, String contrasena) {
-        ret = this.q.q("SELECT Id FROM Administrador WHERE Correo = '"+correo+"' AND Contrasena = '"+contrasena+"';",  new String[]{"Id"}, false);
+        ret = this.q.q("SELECT Correo FROM Administrador WHERE Correo = '"+correo+"' AND Contrasena = '"+contrasena+"';",  new String[]{"Correo"}, false);
         if(ret.size() == 1){
             return true;
         }else{
@@ -133,16 +137,10 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     public Map<String, String> getAdministrador(String correo) {
         map.putAll(this.q.q("SELECT * FROM Administrador WHERE Correo = '"+correo+"';", Administrador.getArrayAttributes(), true).get(0));
         return map;
-    }
-    
-    @Override
-    public Map<String, String> getAdministrador(int id){
-        map.putAll(this.q.q("SELECT * FROM Administrador WHERE Id = '"+String.valueOf(id)+"';", Administrador.getArrayAttributes(), true).get(0));
-        return map;
-    }       
+    }    
 
     @Override
     public List<Map<String, String>> getAdministradores() {
-        return this.q.q("SELECT Id, Estado, Nivel, Correo, UltimaSesion FROM Administrador;",new String[]{"Id", "Estado", "Nivel", "Correo", "UltimaSesion"}, true);
+        return this.q.q("SELECT Estado, Nivel, Correo, UltimaSesion FROM Administrador;",new String[]{"Estado", "Nivel", "Correo", "UltimaSesion"}, true);
     }
 }

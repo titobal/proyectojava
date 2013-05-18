@@ -14,7 +14,6 @@ import java.util.Map;
  * @author cristobal
  */
 public class Administrador {
-    private int id;
     private String correo;
     private String contrasena;
     private String ultimaSesion;
@@ -28,16 +27,14 @@ public class Administrador {
         this.nivel = nivel;
     }
     
-    public Administrador(int id, String correo, String ultimaSesion, boolean estado, int nivel){
-        this.id = id;
+    public Administrador(String correo, String ultimaSesion, boolean estado, int nivel){
         this.correo = correo;
         this.ultimaSesion = ultimaSesion;
         this.estado = estado;
         this.nivel = nivel;
     }
     
-    public Administrador(int id, String correo, String contrasena, String ultimaSesion, boolean estado, int nivel){
-        this.id = id;
+    public Administrador(String correo, String contrasena, String ultimaSesion, boolean estado, int nivel){
         this.correo = correo;
         this.contrasena = contrasena;
         this.ultimaSesion = ultimaSesion;
@@ -48,8 +45,6 @@ public class Administrador {
     public List<Map<String, String>> toListMap(){
         Map<String, String> map = new HashMap<String, String>();
         List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
-        map.put("id",String.valueOf(this.id));
-        map.put("0",String.valueOf(this.id));
         map.put("correo",this.correo);
         map.put("1",this.correo);
         map.put("ultimaSesion",this.ultimaSesion);
@@ -63,20 +58,12 @@ public class Administrador {
     }
     
     public static String[] getArrayAttributes(){
-        return new String[]{"Id","Estado","Nivel","Correo","UltimaSesion","Contrasena"};
+        return new String[]{"Correo","Contrasena","Estado","Nivel","UltimaSesion"};
     }
     
     public Administrador(String correo, String contrasena){
         this.correo = correo;
         this.contrasena = contrasena;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getCorreo() {

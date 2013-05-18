@@ -36,7 +36,7 @@ public class Conexion {
         } catch (ClassNotFoundException ex) {
             logger.log(Level.CONFIG, "No se puede cargar el Driver: {0}", ex.getMessage());
         }
-        url = "jdbc:mysql://localhost/admin"; //Nombre y ubicación de la base de datos
+        url = "jdbc:mysql://localhost/proyectojava"; //Nombre y ubicación de la base de datos
         user = "root"; //Usuario de conexión a la BD
         pass = ""; //Contraseña del usuario de conesión a la BD
         try {

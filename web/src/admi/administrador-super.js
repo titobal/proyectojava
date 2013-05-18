@@ -3,7 +3,7 @@ var Administrador = function(){
     this.adapta = function(){
         $("#Administradores table thead tr").append("<th></th>")
     };
-    this.table = _.template("<tr val='<%= Id %>'><td><%= Id %></td><td><%= Correo %></td><td><button class='btn btn-primary btn-mini nivel'><%= Nivel == 0? 'Super Administrador' : 'Administrador' %></button></td><td><%= UltimaSesion == 'NULL' ? 'No ha iniciado sesión' : tools.printDate(UltimaSesion) %></td><td><button class='btn btn-primary btn-mini estado'><%= Estado == '1'?'Activo':'Inactivo' %></button></td><td><button class='btn btn-primary btn-mini elimina'><i class='icon-white icon-trash'></i></button></td></tr>");
+    this.table = _.template("<tr val='<%= Correo %>'><td><%= Correo %></td><td><button class='btn btn-primary btn-mini nivel'><%= Nivel == 0? 'Super Administrador' : 'Administrador' %></button></td><td><%= UltimaSesion == 'NULL' ? 'No ha iniciado sesión' : tools.printDate(UltimaSesion) %></td><td><button class='btn btn-primary btn-mini estado'><%= Estado == '1'?'Activo':'Inactivo' %></button></td><td><button class='btn btn-primary btn-mini elimina'><i class='icon-white icon-trash'></i></button></td></tr>");
     this.printTable = function(){
         var me = this;
         var html = "";
@@ -24,7 +24,7 @@ var Administrador = function(){
     };
     this.includeAdmin = function(d){
         var me = this;
-        var i = tools.returnIndex(me.administradores, function(x) {return x.Id === d.Id;});
+        var i = tools.returnIndex(me.administradores, function(x) {return x.Correo === d.Correo;});
         if(i !== "undefined"){
             me.administradores[i] = d;
         }
@@ -35,7 +35,7 @@ var Administrador = function(){
     };
     this.removeAdmin = function(d){
         var me = this;
-        var i = tools.returnIndex(me.administradores, function(x) {return x.Id === d.Id;});
+        var i = tools.returnIndex(me.administradores, function(x) {return x.Correo === d.Correo;});
         if(i !== "undefined"){
             me.administradores.splice(i,1);
         }

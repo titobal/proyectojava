@@ -36,8 +36,6 @@ public interface AdministradorDAO {
     public int getCountAdministradorPorCorreo(String correo);
     
     public Map<String, String> getAdministrador(String correo);
-    
-    public Map<String, String> getAdministrador(int id);
-    
+        
     public List<Map<String, String>> getAdministradores();
 }
