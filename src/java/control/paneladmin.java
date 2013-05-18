@@ -39,16 +39,36 @@ public class paneladmin extends HttpServlet {
             }else{
                 if(request.getParameter("o") != null){
                     switch(Integer.parseInt(request.getParameter("o"))){
-                        case 3:
+                        case 3://ADMINISTRADOR
                             if(request.getParameter("m")!= null){
                                 switch(Integer.parseInt(request.getParameter("m"))){
-                                    case 1:
+                                    case 1://getAdministradores
                                         out.println(gson.toJson(new OutPut("0","ok",ad.getAdministradores())));
                                     break;
-                                    case 2:
+                                    case 2://creaAdministraaor
                                         if(request.getParameter("correo") != null && request.getParameter("nivel") != null){
                                             out.println(ad.nuevoAdministrador(
                                                     new Administrador(request.getParameter("correo"), Integer.parseInt(request.getParameter("nivel")))));
+                                        }else{
+                                            out.println(gson.toJson(msg.sinValores()));
+                                        }
+                                    break;
+                                    case 3://updateAdministrador
+                                        if(request.getParameter("correo") != null && request.getParameter("a") != null){
+                                            switch(Integer.parseInt(request.getParameter("a"))){
+                                                case 1://UPDATE NIVEL
+                                                    out.println(ad.updateNivel(request.getParameter("correo"), session.getAttribute("admin").toString()));
+                                                break;
+                                                case 2://UPDATE ESTADO
+                                                    out.println(ad.updateEstado(request.getParameter("correo"), session.getAttribute("admin").toString()));
+                                                break;
+                                                case 3://DELETE ADMINISTRADOR
+                                                    out.println(ad.deleteAdministrador(request.getParameter("correo"), session.getAttribute("admin").toString()));
+                                                break;
+                                                default:
+                                                    out.println(gson.toJson(msg.peticionErronea()));
+                                                break;
+                                            }
                                         }else{
                                             out.println(gson.toJson(msg.sinValores()));
                                         }

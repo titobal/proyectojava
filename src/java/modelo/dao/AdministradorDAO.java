@@ -13,7 +13,9 @@ import modelo.bean.Administrador;
  * @author cristobal
  */
 public interface AdministradorDAO {
-    public List<Map<String, String>> updateAttr(int id, int m);
+    public String updateNivel(String correo, String admin);
+    
+    public String updateEstado(String correo, String admin);
     
     public List<Map<String, String>> guardaCodigo(String correo, String codigo);
     
@@ -25,11 +27,9 @@ public interface AdministradorDAO {
     
     public String nuevoAdministrador(Administrador a);
     
-    public List<Map<String, String>> getNivel(int id);
+    public boolean compruebaPrivilegios(String correo);
     
-    public List<Map<String, String>> getEstado(int id);
-    
-    public List<Map<String, String>> updateUltimaSesion(int id);
+    public void updateUltimaSesion(String correo);
     
     public boolean intentaIniciarSesion(String correo, String contrasena);
     
@@ -38,4 +38,6 @@ public interface AdministradorDAO {
     public Map<String, String> getAdministrador(String correo);
         
     public List<Map<String, String>> getAdministradores();
+    
+    public String deleteAdministrador(String correo, String administrador);
 }

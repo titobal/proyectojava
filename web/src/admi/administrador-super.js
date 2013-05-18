@@ -97,65 +97,50 @@ var Administrador = function(){
             tools.ajaxDone(data, fun);
         }).fail(tools.ajaxFail);
     };
-    this.cambiaNivel = function(id){
+    this.cambiaNivel = function(correo){
         var me = this;
-        if(!isNaN(parseInt(id))){
-            var adm = _(me.administradores).find(function(x) { return x.Id === id;});
-            c.confirm("¿Está seguro de que desea cambiar el nivel del administrador "+adm.Correo+"?");
-            $("#confirm .true").unbind("click").bind("click", function(){
-                $("#confirm").modal("hide");
-                $.ajax({data:{o:3,m:3,id:id,t:2}}).done(function(data){
-                    var fun = function(d){
-                        d = d.obj[0];
-                        me.includeAdmin(d);
-                    };
-                    tools.ajaxDone(data, fun);
-                }).fail(tools.ajaxFail);
-            });
-        }
-        else{
-            tools.msg.errIne();
-        }
+        var adm = _(me.administradores).find(function(x) { return x.Correo === correo;});
+        c.confirm("¿Está seguro de que desea cambiar el nivel del administrador "+adm.Correo+"?");
+        $("#confirm .true").unbind("click").bind("click", function(){
+            $("#confirm").modal("hide");
+            $.ajax({data:{o:3,m:3,correo:correo,a:1}}).done(function(data){
+                var fun = function(d){
+                    d = d[0];
+                    me.includeAdmin(d);
+                };
+                tools.ajaxDone(data, fun);
+            }).fail(tools.ajaxFail);
+        });
     };
-    this.cambiaEstado = function(id){
+    this.cambiaEstado = function(correo){
         var me = this;
-        if(!isNaN(parseInt(id))){
-            var adm = _(me.administradores).find(function(x) { return x.Id === id;});
-            c.confirm("¿Está seguro de que desea cambiar el estado del administrador "+adm.Correo+"?");
-            $("#confirm .true").unbind("click").bind("click", function(){
-                $("#confirm").modal("hide");
-                $.ajax({data:{o:3,m:3,id:id,t:1}}).done(function(data){
-                    var fun = function(d){
-                        d = d.obj[0];
-                        me.includeAdmin(d);
-                    };
-                    tools.ajaxDone(data, fun);
-                }).fail(tools.ajaxFail);
-            });
-        }
-        else{
-            tools.msg.errIne();
-        }
+        var adm = _(me.administradores).find(function(x) { return x.Correo === correo;});
+        c.confirm("¿Está seguro de que desea cambiar el estado del administrador "+adm.Correo+"?");
+        $("#confirm .true").unbind("click").bind("click", function(){
+            $("#confirm").modal("hide");
+            $.ajax({data:{o:3,m:3,correo:correo,a:2}}).done(function(data){
+                var fun = function(d){
+                    d = d[0];
+                    me.includeAdmin(d);
+                };
+                tools.ajaxDone(data, fun);
+            }).fail(tools.ajaxFail);
+        });
     };
-    this.elimina = function(id){
+    this.elimina = function(correo){
         var me = this;
-        if(!isNaN(parseInt(id))){
-            var adm = _(me.administradores).find(function(x) { return x.Id === id;});
-            c.confirm("¿Está seguro de que desea eliminar al administrador "+adm.Correo+"?");
-            $("#confirm .true").unbind("click").bind("click", function(){
-                $("#confirm").modal("hide");
-                $.ajax({data:{o:3,m:3,id:id,t:3}}).done(function(data){
-                    var fun = function(d){
-                        d = d.obj;
-                        me.removeAdmin(d);
-                    };
-                    tools.ajaxDone(data, fun);
-                }).fail(tools.ajaxFail);
-            });
-        }
-        else{
-            tools.msg.errIne();
-        }
+        var adm = _(me.administradores).find(function(x) { return x.Correo === correo;});
+        c.confirm("¿Está seguro de que desea eliminar al administrador "+adm.Correo+"?");
+        $("#confirm .true").unbind("click").bind("click", function(){
+            $("#confirm").modal("hide");
+            $.ajax({data:{o:3,m:3,correo:correo,a:3}}).done(function(data){
+                var fun = function(d){
+                    d = d[0];
+                    me.removeAdmin(d);
+                };
+                tools.ajaxDone(data, fun);
+            }).fail(tools.ajaxFail);
+        });
     };
 };
 

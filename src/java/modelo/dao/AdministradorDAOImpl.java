@@ -25,8 +25,51 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     Gson gson = new Gson();
     
     @Override
-    public List<Map<String, String>> updateAttr(int id, int m) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String deleteAdministrador(String correo, String admin){
+        List<Map<String, String>> retu = new ArrayList<Map<String, String>>();
+        if(!correo.equals(admin)){
+            if(this.compruebaPrivilegios(admin)){
+                retu.add(this.getAdministrador(correo, false));
+                this.q.s("DELETE FROM Administrador WHERE Correo = '"+correo+"';", true);
+                return gson.toJson(new OutPut("0","ok",retu));
+            }else{
+                return gson.toJson(new OutPut("1","No tiene los permisos suficientes para realizar esta acción."));
+            }
+        }else{
+            return gson.toJson(new OutPut("1","No puede modificar sus propios atributos."));
+        }
+    }
+    
+    @Override
+    public String updateNivel(String correo, String admin) {
+        List<Map<String, String>> retu = new ArrayList<Map<String, String>>();
+        if(!correo.equals(admin)){
+            if(this.compruebaPrivilegios(admin)){
+                this.q.s("UPDATE Administrador SET Nivel = CASE WHEN Nivel = 1 THEN 0 ELSE 1 END WHERE Correo = '"+correo+"';", false);
+                retu.add(this.getAdministrador(correo));
+                return gson.toJson(new OutPut("0","ok",retu));
+            }else{
+                return gson.toJson(new OutPut("1","No tiene los permisos suficientes para realizar esta acción."));
+            }
+        }else{
+            return gson.toJson(new OutPut("1","No puede modificar sus propios atributos."));
+        }
+    }
+    
+    @Override
+    public String updateEstado(String correo, String admin){
+        List<Map<String, String>> retu = new ArrayList<Map<String, String>>();
+        if(!correo.equals(admin)){
+            if(this.compruebaPrivilegios(admin)){
+                this.q.s("UPDATE Administrador SET Estado = CASE WHEN Estado = 1 THEN 0 ELSE 1 END WHERE Correo = '"+correo+"';", false);
+                retu.add(this.getAdministrador(correo));
+                return gson.toJson(new OutPut("0","ok",retu));
+            }else{
+                return gson.toJson(new OutPut("1","No tiene los permisos suficientes para realizar esta acción."));
+            }
+        }else{
+            return gson.toJson(new OutPut("1","No puede modificar sus propios atributos."));
+        }
     }
 
     @Override
@@ -84,7 +127,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public boolean iniciaSesion(Administrador a) {
         if(this.intentaIniciarSesion(a.getCorreo(), a.getContrasena())){
-            this.q.cierra();
+            this.updateUltimaSesion(a.getCorreo());
             return true;
         }else{
             this.q.cierra();
@@ -104,18 +147,18 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     }
 
     @Override
-    public List<Map<String, String>> getNivel(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean compruebaPrivilegios(String correo){
+        ret = this.q.q("SELECT Nivel, Estado FROM Administrador WHERE Correo = '"+correo+"';", new String[]{"Nivel","Estado"},false);
+        if(Integer.parseInt(ret.get(0).get("Nivel")) == 0 && Integer.parseInt(ret.get(0).get("Estado")) == 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
-    public List<Map<String, String>> getEstado(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Map<String, String>> updateUltimaSesion(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateUltimaSesion(String correo) {
+        this.q.s("UPDATE Administradro SET UltimaSesion = sysdate() WHERE Correo = '"+correo+"';", true);
     }
 
     @Override
@@ -137,7 +180,12 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     public Map<String, String> getAdministrador(String correo) {
         map.putAll(this.q.q("SELECT * FROM Administrador WHERE Correo = '"+correo+"';", Administrador.getArrayAttributes(), true).get(0));
         return map;
-    }    
+    }
+    
+    public Map<String, String> getAdministrador(String correo, boolean cierra){
+        map.putAll(this.q.q("SELECT * FROM Administrador WHERE Correo = '"+correo+"';", Administrador.getArrayAttributes(), cierra).get(0));
+        return map;
+    }
 
     @Override
     public List<Map<String, String>> getAdministradores() {
