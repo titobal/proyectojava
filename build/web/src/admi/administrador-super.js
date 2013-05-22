@@ -59,14 +59,19 @@ var Administrador = function(){
     };
     this.fNuevoAdmin = function(){
         var me = this;
-        var form = '<fieldset><div class="control-group"><label class="control-label">Correo Electrónico</label><div class="controls"><input required name="correo" type="email" placeholder="ejemplo@ejemplo.cl" class="input-xlarge"></div></div><div class="control-group"><label class="control-label">Nivel</label><div class="controls"><div class="btn-group" data-toggle="buttons-radio"><button type="button" class="btn btn-primary active" value="1">Administrador</button><button type="button" class="btn btn-primary" value="0">Super Administrador</button></div></div></div><p class="text-center">Estado: Activo</p></fieldset>';
+        var form = '<fieldset><div class="control-group"><label class="control-label">Correo Electrónico</label><div class="controls">'+
+                '<input required name="correo" type="email" placeholder="ejemplo@ejemplo.cl" class="input-xlarge"></div></div>'+
+                '<div class="control-group"><label class="control-label">Nivel</label><div class="controls">'+
+                '<div class="btn-group" data-toggle="buttons-radio"><button type="button" class="btn btn-primary active" value="1">Administrador</button>'+
+                '<button type="button" class="btn btn-primary" value="0">Super Administrador</button></div></div></div>'+
+                '<p class="text-center">Estado: Activo</p></fieldset>';
         var id = tools.randomString(10);
         var params = {
             form: form,
             id:id,
             title:"Nuevo Administrador"
         };
-        $(c.v.i4).html(tools.fTemplate(params)).modal("show").find("form").addClass("form-horizontal").submit(function(event){
+        $(c.v.i4).html(tools.fTemplate(params)).modal("show").removeClass("container").find("form").addClass("form-horizontal").submit(function(event){
             (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
             $.ajax({data:{o:3,m:2,
                     correo:$(c.v.i4 + " [name='correo']").val(),

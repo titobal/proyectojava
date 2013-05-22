@@ -16,3 +16,6 @@ table{
     background-color:#fff;
     box-shadow:0 3px 5px rgba(0,0,0,0.11)
 }
+#listProds .thumbnail{
+    background-color: white;
+}

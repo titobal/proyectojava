@@ -38,6 +38,7 @@ $(document).ready(function(){
     c.tabs();
     c.btUpdate();
     c.updNames();
+    prod.setUp();
     typeof(admin.showFNewAdmin) === "function" ? admin.showFNewAdmin() : "";
     if(admin.adapta){admin.adapta()}
 }).bind("ajaxSend", tools.ajaxStart).bind("ajaxStop", tools.ajaxFinish);

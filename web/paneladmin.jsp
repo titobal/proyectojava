@@ -8,7 +8,7 @@
 <%@page import="modelo.dao.AdministradorDAO"%>
 <%@page import="modelo.bean.Administrador"%>
 <%
-    if(session.getAttribute("admin") == null){
+    if (session.getAttribute("admin") == null) {
         response.sendRedirect("loginadmin.jsp");
     }
     AdministradorDAO ad = new AdministradorDAOImpl();
@@ -21,7 +21,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Inicio de sesi&oacute;n</title>
+        <title>Panel de Administraci&oacute;n</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <!--[if lt IE 9]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -30,7 +30,8 @@
         <script src="src/js/underscore.min.js" type="text/javascript"></script>
         <script src="src/bootstrap/pnotify/jquery.pnotify.min.js" type="text/javascript"></script>
         <script src="src/js/tools.js" type="text/javascript"></script>
-        <script src="src/admi/administrador<%out.println(a.getNivel() == 0?"-super":"");%>.js" type="text/javascript"></script>
+        <script src="src/admi/administrador<%out.println(a.getNivel() == 0 ? "-super" : "");%>.js" type="text/javascript"></script>
+        <script src="src/admi/producto.js" type="text/javascript"></script>
         <script src="src/admi/panel.js" type="text/javascript"></script>
         <link href="src/bootstrap/css/united.bootstrap.min.css" type="text/css" rel="stylesheet"/>
         <link href="src/bootstrap/css/bootstrap-responsive.min.css" type="text/css" rel="stylesheet"/>
@@ -65,34 +66,47 @@
                 </div>
             </div>
         </div>
-        
+
         <!--container-->
         <div style="display:none" class="container main">
             <div class="row">
                 <div class="span3 bs-docs-sidebar">
                     <ul style="top:0" class="nav nav-list bs-docs-sidenav affix">
-                        <li class="active"><a href="#Usuarios" data-toggle="tab"><i class="icon-chevron-right"></i> Usuarios</a></li>
-                        <li class=""><a href="#Eventos" data-toggle="tab"><i class="icon-chevron-right"></i> Eventos</a></li>
+                        <li class="active"><a href="#Productos" data-toggle="tab"><i class="icon-chevron-right"></i> Productos</a></li>
+                        <li class=""><a href="#Categorias" data-toggle="tab"><i class="icon-chevron-right"></i> Categor&iacute;as</a></li>
                         <li class=""><a href="#Administradores" data-toggle="tab"><i class="icon-chevron-right"></i> Administradores</a></li>
                     </ul>
                 </div>
                 <div class="span9 tab-content">
                     <br/>
-                    <div id="Usuarios" class="tab-pane animated fadeInDown in active">
-                        <h1>Usuarios</h1>
+                    <div id="Categorias" class="tab-pane animated fadeInDown">
+                        <h1>Categor&iacute;as</h1>
+                        <div class='btn-group'>
+                            <button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>
+                            <button class='btn btn-primary bt-new'><i class='icon-white icon-plus'></i></button>
+                        </div>
+                        <br/><br/>
                     </div>
-                    <div id="Eventos" class="tab-pane animated fadeInDown">
-                        <h1>Eventos</h1>
+                    <div id="Productos" class="tab-pane active animated fadeInDown">
+                        <h1>Productos</h1>
+                        <div class='btn-group'>
+                            <button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>
+                            <button class='btn btn-primary bt-new'><i class='icon-white icon-plus'></i></button>
+                        </div>
+                        <br/><br/>
+                        <div class="row-fluid">
+                            <ul class="thumbnails" id="listProds"></ul>
+                        </div>
                     </div>
                     <div id="Administradores" class="tab-pane animated fadeInDown">
                         <h1>Administradores</h1>
                         <%
-                            if(a.getNivel() == 0){
-                                out.println("<div class='btn-group'>"+
-                                    "<button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>"+
-                                    "<button class='btn btn-primary bt-new'><i class='icon-white icon-plus'></i></button>"+
-                                            "</div>");
-                            }else{
+                            if (a.getNivel() == 0) {
+                                out.println("<div class='btn-group'>"
+                                        + "<button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>"
+                                        + "<button class='btn btn-primary bt-new'><i class='icon-white icon-plus'></i></button>"
+                                        + "</div>");
+                            } else {
                                 out.println("<button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>");
                             }
                         %>
@@ -112,19 +126,23 @@
                 </div>
             </div>
         </div>
-        
-        <script>setInterval(function(){$(".navbar-fixed-top").show().addClass("animated fadeInDown");
-        setInterval(function(){$(".main").show().addClass("animated fadeInDown");},600);},1000);</script>
-        
+
+        <script>setInterval(function() {
+                $(".navbar-fixed-top").show().addClass("animated fadeInDown");
+                setInterval(function() {
+                    $(".main").show().addClass("animated fadeInDown");
+                }, 600);
+            }, 1000);</script>
+
         <div id="4" class="modal hide fade"></div>
-        
+
         <div id="loading" class="text-center">
             <div class="progress progress-striped active">
                 <div class="bar" style="width: 100%;"></div>
             </div>
             <p>Cargando...</p>
         </div>
-        
+
         <div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
             <div class="modal-body"><p class="message"></p></div>
             <div class="modal-footer">
@@ -132,7 +150,7 @@
                 <button type="button" class="btn btn-primary true">Aceptar</button>
             </div>
         </div>
-        
+
         <script src="src/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="src/bootstrap/modal/js/bootstrap-modalmanager.js" type="text/javascript"></script>
         <script src="src/bootstrap/modal/js/bootstrap-modal.js" type="text/javascript"></script>

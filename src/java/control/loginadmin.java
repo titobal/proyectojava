@@ -44,7 +44,7 @@ public class loginadmin extends HttpServlet {
             HttpSession session = request.getSession();
             Administrador a = new Administrador();
             AdministradorDAO ad = new AdministradorDAOImpl();
-            String correo;String contrasena;
+            String correo;
             if(session.getAttribute("admin") != null){                
                 out.println(gson.toJson(msg.tieneSesion()));
             }else{

@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelo.bean.Administrador;
+import modelo.bean.Producto;
 import modelo.dao.AdministradorDAO;
 import modelo.dao.AdministradorDAOImpl;
+import modelo.dao.ProductoDAO;
+import modelo.dao.ProductoDAOImpl;
 
 /**
  *
@@ -39,6 +42,53 @@ public class paneladmin extends HttpServlet {
             }else{
                 if(request.getParameter("o") != null){
                     switch(Integer.parseInt(request.getParameter("o"))){
+                        case 1://Categorias
+                            if(request.getParameter("m")!= null){
+                                Producto p = new Producto();
+                                ProductoDAO pd = new ProductoDAOImpl();
+                                switch(Integer.parseInt(request.getParameter("m"))){
+                                    case 1:
+                                        out.println(gson.toJson(new OutPut("0","ok",pd.getCategorias())));
+                                    break;
+                                    default:
+                                        out.println(gson.toJson(msg.peticionErronea()));
+                                    break;
+                                }
+                            }else{
+                                out.println(gson.toJson(msg.sinValores())); 
+                            }
+                        break;
+                        case 2://Producto
+                            if(request.getParameter("m")!= null){
+                                ProductoDAO pd = new ProductoDAOImpl();
+                                switch(Integer.parseInt(request.getParameter("m"))){
+                                    case 1://NEW PRODUCTO
+                                        if(request.getParameter("nombre") != null && request.getParameter("descripcion") != null
+                                                && request.getParameter("precio") != null && request.getParameter("stock") != null
+                                                && request.getParameter("estado") != null && request.getParameter("categoria") != null){
+                                            String nombre = request.getParameter("nombre");
+                                            String descripcion = request.getParameter("descripcion");
+                                            double precio = Double.parseDouble(request.getParameter("precio"));
+                                            int stock = Integer.parseInt(request.getParameter("stock"));
+                                            boolean estado = (request.getParameter("estado").equals("1")) ? true : false;
+                                            int categoria = Integer.parseInt(request.getParameter("categoria"));
+                                            Producto p = new Producto(nombre, descripcion, precio, stock, estado, categoria);
+                                            out.println(pd.nuevoProducto(p));
+                                        }else{
+                                            out.println(gson.toJson(msg.sinValores()));
+                                        }
+                                    break;
+                                    case 2:
+                                        out.println(gson.toJson(new OutPut("0","ok",pd.getProductos())));
+                                    break;
+                                    default:
+                                        out.println(gson.toJson(msg.peticionErronea()));
+                                    break;
+                                }
+                            }else{
+                                out.println(gson.toJson(msg.sinValores()));
+                            }
+                        break;
                         case 3://ADMINISTRADOR
                             if(request.getParameter("m")!= null){
                                 switch(Integer.parseInt(request.getParameter("m"))){
@@ -74,7 +124,7 @@ public class paneladmin extends HttpServlet {
                                         }
                                     break;
                                     default:
-                                        out.println(gson.toJson(msg.sinValores()));
+                                        out.println(gson.toJson(msg.peticionErronea()));
                                     break;
                                 }
                             }else{

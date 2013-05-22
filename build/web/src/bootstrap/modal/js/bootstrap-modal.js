@@ -344,7 +344,7 @@
 		focusOn: null,
 		replace: false,
 		resize: false,
-		attentionAnimation: 'tada',
+		attentionAnimation: 'shake',
 		manager: 'body',
 		spinner: '<div class="loading-spinner" style="width: 200px; margin-left: -100px;"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div>'
 	};

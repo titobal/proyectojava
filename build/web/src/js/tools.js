@@ -42,16 +42,18 @@ var Tools = function(){
 	return randomstring;
     };
     this.returnIndex = function(items, f){
+        var x;
         for(var i in  items) {
           var item = items[i];
-          if (f(item)) return i;
+          if (f(item)) x = i;
         };
-        return "undefined";
+        return x;
     };
     this.msg = {
         errIne : function(){tools.pnotify.bottomright("Error", tools.errText.erIne, "error");},
         msg : function(msg){tools.pnotify.bottomright("Error", msg, "error");},
-        noCon : function(){tools.pnotify.bottomright("Error", tools.errText.noCom, "error");}
+        noCon : function(){tools.pnotify.bottomright("Error", tools.errText.noCom, "error");},
+        per : function(title, men, type){tools.pnotify.bottomright(title, men, type);}
     };
     this.ajaxDone = function(data, fun, funb){
         console.log(data);
