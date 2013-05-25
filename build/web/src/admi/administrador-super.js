@@ -61,6 +61,8 @@ var Administrador = function(){
         var me = this;
         var form = '<fieldset><div class="control-group"><label class="control-label">Correo Electrónico</label><div class="controls">'+
                 '<input required name="correo" type="email" placeholder="ejemplo@ejemplo.cl" class="input-xlarge"></div></div>'+
+                '<div class="control-group"><label class="control-label">Nombre</label><div class="controls">'+
+                '<input required name="nombre" type="text" placeholder="juan perez" class="input-xlarge"></div></div>'+
                 '<div class="control-group"><label class="control-label">Nivel</label><div class="controls">'+
                 '<div class="btn-group" data-toggle="buttons-radio"><button type="button" class="btn btn-primary active" value="1">Administrador</button>'+
                 '<button type="button" class="btn btn-primary" value="0">Super Administrador</button></div></div></div>'+
@@ -75,6 +77,7 @@ var Administrador = function(){
             (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
             $.ajax({data:{o:3,m:2,
                     correo:$(c.v.i4 + " [name='correo']").val(),
+                    nombre:$(c.v.i4 + " [name='nombre']").val(),
                     nivel:$(c.v.i4 + " button.active").val()
                 }}).done(function(data){
                 var fun = function(d){

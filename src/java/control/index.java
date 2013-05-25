@@ -35,10 +35,31 @@ public class index extends HttpServlet {
                 ProductoDAO pd = new ProductoDAOImpl();
                 switch(Integer.parseInt(request.getParameter("m"))){
                     case 1:
-                        out.println(gson.toJson(new OutPut("0","ok",pd.getCategorias())));
+                        out.println(gson.toJson(new OutPut("0","ok",pd.getCategorias(false))));
                     break;
                     case 2:
-                        out.println(gson.toJson(new OutPut("0","ok",pd.getProductos())));
+                        out.println(gson.toJson(new OutPut("0","ok",pd.getProductos(false))));
+                    break;
+                    case 3:
+                        out.println(gson.toJson(new OutPut("0","ok",pd.getComunas())));
+                    break;
+                    case 4:
+                        if(request.getParameter("nombre") != null && request.getParameter("apellidoP") != null && request.getParameter("apellidoM") != null &&
+                                request.getParameter("correo") != null && request.getParameter("comuna") != null &&
+                                request.getParameter("calle") != null && request.getParameter("numero") != null &&
+                                request.getParameter("carro") != null){
+                            String nombre = request.getParameter("nombre");
+                            String apellidoP = request.getParameter("apellidoP");
+                            String apellidoM = request.getParameter("apellidoM");
+                            String correo = request.getParameter("correo");
+                            int comuna = Integer.parseInt(request.getParameter("comuna"));
+                            String calle = request.getParameter("calle");
+                            int numero = Integer.parseInt(request.getParameter("numero"));
+                            String carro = request.getParameter("carro");
+                            out.println(pd.newVenta(nombre, apellidoP, apellidoM, correo, comuna, calle, numero, carro));
+                        }else{
+                            out.println(gson.toJson(msg.sinValores()));
+                        }
                     break;
                     default:
                         out.println(gson.toJson(msg.peticionErronea()));

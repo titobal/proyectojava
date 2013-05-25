@@ -8,14 +8,14 @@
 <%@page import="modelo.dao.AdministradorDAO"%>
 <%@page import="modelo.bean.Administrador"%>
 <%
-    if (session.getAttribute("admin") == null) {
-        response.sendRedirect("loginadmin.jsp");
-    }
-    AdministradorDAO ad = new AdministradorDAOImpl();
-    Map<String, String> m = ad.getAdministrador(session.getAttribute("admin").toString());
-    Administrador a = new Administrador(m.get("Correo"), m.get("UltimaSesion"),
-            (m.get("Estado")) == "1" ? true : false, Integer.parseInt(m.get("Nivel")));
-    //Administrador a = new Administrador("asd","12-12-12 12:12:12",true,0);
+    try{
+        if (session.getAttribute("admin") == null) {
+            response.sendRedirect("loginadmin.jsp");
+        }
+        AdministradorDAO ad = new AdministradorDAOImpl();
+        Map<String, String> m = ad.getAdministrador(session.getAttribute("admin").toString());
+        Administrador a = new Administrador(m.get("Correo"), m.get("Nombre"), m.get("UltimaSesion"),
+                (m.get("Estado")) == "1" ? true : false, Integer.parseInt(m.get("Nivel")), false);
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
@@ -30,7 +30,9 @@
         <script src="src/js/underscore.min.js" type="text/javascript"></script>
         <script src="src/bootstrap/pnotify/jquery.pnotify.min.js" type="text/javascript"></script>
         <script src="src/js/tools.js" type="text/javascript"></script>
-        <script src="src/admi/administrador<%out.println(a.getNivel() == 0 ? "-super" : "");%>.js" type="text/javascript"></script>
+        <%out.println(a.getNivel() == 0 ?
+                "<script src='src/admi/administrador-super.js' type='text/javascript'></script>"
+                : ""); %>
         <script src="src/admi/producto.js" type="text/javascript"></script>
         <script src="src/admi/panel.js" type="text/javascript"></script>
         <link href="src/bootstrap/css/united.bootstrap.min.css" type="text/css" rel="stylesheet"/>
@@ -52,7 +54,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a style="color:#fff" class="brand" href="">Administrador</a>
+                    <a style="color:#fff" class="brand" href=""><% out.println(a.getNombre()); %></a>
                     <div class="nav-collapse collapse" id="main-menu" style="height: 0px;">
                         <ul class="nav" id="main-menu-left">
                             <li class="dropdown">
@@ -74,7 +76,11 @@
                     <ul style="top:0" class="nav nav-list bs-docs-sidenav affix">
                         <li class="active"><a href="#Productos" data-toggle="tab"><i class="icon-chevron-right"></i> Productos</a></li>
                         <li class=""><a href="#Categorias" data-toggle="tab"><i class="icon-chevron-right"></i> Categor&iacute;as</a></li>
-                        <li class=""><a href="#Administradores" data-toggle="tab"><i class="icon-chevron-right"></i> Administradores</a></li>
+                        <%
+                            if (a.getNivel() == 0) {
+               out.println("<li class=''><a href='#Administradores' data-toggle='tab'><i class='icon-chevron-right'></i> Administradores</a></li>");
+                            }
+                        %>
                     </ul>
                 </div>
                 <div class="span9 tab-content">
@@ -98,30 +104,29 @@
                             <ul class="thumbnails" id="listProds"></ul>
                         </div>
                     </div>
-                    <div id="Administradores" class="tab-pane animated fadeInDown">
-                        <h1>Administradores</h1>
                         <%
                             if (a.getNivel() == 0) {
-                                out.println("<div class='btn-group'>"
+                                out.println(
+                                        "<div id='Administradores' class='tab-pane animated fadeInDown'>"+
+                                        "<h1>Administradores</h1>"+
+                                        "<div class='btn-group'>"
                                         + "<button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>"
                                         + "<button class='btn btn-primary bt-new'><i class='icon-white icon-plus'></i></button>"
-                                        + "</div>");
-                            } else {
-                                out.println("<button class='btn btn-primary bt-update'><i class='icon-white icon-refresh'></i></button>");
+                                        + "</div>"+
+                                        "<br/><br/>"+
+                        "<table class='table table-striped table-bordered table-hover table-condensed'>"+
+                            "<thead>"+
+                                "<tr>"+
+                                    "<th>Correo</th>"+
+                                    "<th>Nivel</th>"+
+                                    "<th>Ultima Sesión</th>"+
+                                    "<th>Estado</th>"+
+                                "</tr>"+
+                            "</thead>"+
+                            "<tbody></tbody>"+
+                        "</table>");
                             }
                         %>
-                        <br/><br/>
-                        <table class="table table-striped table-bordered table-hover table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Correo</th>
-                                    <th>Nivel</th>
-                                    <th>Ultima Sesión</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -156,3 +161,7 @@
         <script src="src/bootstrap/modal/js/bootstrap-modal.js" type="text/javascript"></script>
     </body>
 </html>
+<%
+    }
+    catch(NullPointerException e){ }
+%>

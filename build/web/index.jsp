@@ -20,7 +20,7 @@
         <script src="src/js/accounting.min.js" type="text/javascript"></script>
         <script src="src/js/tools.js" type="text/javascript"></script>
         <script src="src/js/index.js" type="text/javascript"></script>
-        <link href="src/bootstrap/css/united.bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="src/bootstrap/css/spacelab.bootstrap.min.css" type="text/css" rel="stylesheet"/>
         <link href="src/bootstrap/css/bootstrap-responsive.min.css" type="text/css" rel="stylesheet"/>
         <link href="src/bootstrap/modal/css/bootstrap-modal.css" type="text/css" rel="stylesheet"/>
         <link href="src/bootstrap/css/docs.css" type="text/css" rel="stylesheet"/>
@@ -30,9 +30,8 @@
         <link href="src/admi/panel.css" type="text/css" rel="stylesheet"/>
         <style type="text/css">body {padding-top: 60px;padding-bottom: 40px;}.sidebar-nav {padding: 9px 0;}
             @media (max-width: 980px) {.navbar-text.pull-right {float: none;padding-left: 5px;padding-right: 5px;}}
-            .thumbnail{background-color: #ccc !important;}.caption{cursor:pointer;}</style>
+            .thumbnail{background-color: #f3f3f3 !important;}.caption{cursor:pointer;}</style>
     </head>
-    <body>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
@@ -45,14 +44,14 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="">
-                                <a role="button" href="#">Carrito de compras <i class="icon-shopping-cart icon-white"></i></a>
+                                <a role="button" onclick="m.muestraCarro();" href="#">Carrito de compras <i class="icon-shopping-cart icon-white"></i> (<span id="navCant">0</span>)</a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container"><br/>
+        <div class="container">
             <div class="navbar">
                 <div id="categorias" class="navbar-inner"></div>
             </div>
@@ -68,6 +67,14 @@
             </div>
         </div>
         <div class="modal hide fade" id="modal"></div>
+        <div class="modal hide fade" id="alertModal"></div>
+        <div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-body"><p class="message"></p></div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                <button type="button" class="btn btn-primary true">Aceptar</button>
+            </div>
+        </div>
         <script src="src/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="src/bootstrap/modal/js/bootstrap-modalmanager.js" type="text/javascript"></script>
         <script src="src/bootstrap/modal/js/bootstrap-modal.js" type="text/javascript"></script>

@@ -48,7 +48,7 @@ public class paneladmin extends HttpServlet {
                                 ProductoDAO pd = new ProductoDAOImpl();
                                 switch(Integer.parseInt(request.getParameter("m"))){
                                     case 1:
-                                        out.println(gson.toJson(new OutPut("0","ok",pd.getCategorias())));
+                                        out.println(gson.toJson(new OutPut("0","ok",pd.getCategorias(true))));
                                     break;
                                     default:
                                         out.println(gson.toJson(msg.peticionErronea()));
@@ -79,7 +79,7 @@ public class paneladmin extends HttpServlet {
                                         }
                                     break;
                                     case 2:
-                                        out.println(gson.toJson(new OutPut("0","ok",pd.getProductos())));
+                                        out.println(gson.toJson(new OutPut("0","ok",pd.getProductos(true))));
                                     break;
                                     default:
                                         out.println(gson.toJson(msg.peticionErronea()));
@@ -96,9 +96,9 @@ public class paneladmin extends HttpServlet {
                                         out.println(gson.toJson(new OutPut("0","ok",ad.getAdministradores())));
                                     break;
                                     case 2://creaAdministraaor
-                                        if(request.getParameter("correo") != null && request.getParameter("nivel") != null){
+                                        if(request.getParameter("correo") != null && request.getParameter("nivel") != null && request.getParameter("nombre") != null){
                                             out.println(ad.nuevoAdministrador(
-                                                    new Administrador(request.getParameter("correo"), Integer.parseInt(request.getParameter("nivel")))));
+                                                    new Administrador(request.getParameter("correo"), request.getParameter("nombre"), Integer.parseInt(request.getParameter("nivel")))));
                                         }else{
                                             out.println(gson.toJson(msg.sinValores()));
                                         }

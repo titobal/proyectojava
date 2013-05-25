@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import modelo.bean.Administrador;
+import modelo.bean.EnviarCorreo;
 
 /**
  *
@@ -80,7 +81,9 @@ public class AdministradorDAOImpl implements AdministradorDAO{
                 this.q.s("DELETE FROM CodigoRecuperacion WHERE Administrador = '"+ret.get(0).get("Correo")+"';", false);
                 this.q.s("INSERT INTO CodigoRecuperacion VALUES ('"+codigo+"',sysdate(),'"+ret.get(0).get("Correo")+"');", true);
                 ret = new ArrayList<Map<String, String>>();
-                ret.add(m.msg("Se le ha enviado un correo con el c&oacute;digo de recuperaci&oacute;n.<br/>"+codigo));
+                EnviarCorreo.enviarCorreo(correo, "Recuperacion de contraseña", "el link para recuperar la contraseña es: "+
+                        "http://localhost:8080/proyectojava/loginadmin.jsp#c="+codigo);
+                ret.add(m.msg("Se le ha enviado un correo con el c&oacute;digo de recuperaci&oacute;n."));
                 return ret;
             }else{
                 ret.add(m.errorInesperado());
@@ -138,7 +141,8 @@ public class AdministradorDAOImpl implements AdministradorDAO{
     @Override
     public String nuevoAdministrador(Administrador a) {
         if(this.getCountAdministradorPorCorreo(a.getCorreo()) == 0){
-            this.q.s("INSERT INTO Administrador VALUES ('"+a.getCorreo()+"', 'no tiene', 1, "+String.valueOf(a.getNivel())+", NULL);", false);
+            this.q.s("INSERT INTO Administrador VALUES ('"+a.getCorreo()+"', '"+a.getNombre().toUpperCase()+"','no tiene', 1, "+
+                    String.valueOf(a.getNivel())+", NULL);", false);
             ret.add(this.getAdministrador(a.getCorreo()));
             return gson.toJson(new OutPut("0","ok",ret));
         }else{
@@ -158,7 +162,7 @@ public class AdministradorDAOImpl implements AdministradorDAO{
 
     @Override
     public void updateUltimaSesion(String correo) {
-        this.q.s("UPDATE Administradro SET UltimaSesion = sysdate() WHERE Correo = '"+correo+"';", true);
+        this.q.s("UPDATE Administrador SET UltimaSesion = sysdate() WHERE Correo = '"+correo+"';", true);
     }
 
     @Override

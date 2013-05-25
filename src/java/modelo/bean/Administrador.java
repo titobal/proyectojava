@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class Administrador {
     private String correo;
+    private String nombre;
     private String contrasena;
     private String ultimaSesion;
     private boolean estado;
@@ -27,8 +28,22 @@ public class Administrador {
         this.nivel = nivel;
     }
     
+    public Administrador(String correo, String nombre, int nivel){
+        this.correo = correo;
+        this.nombre = nombre;
+        this.nivel = nivel;
+    }
+    
     public Administrador(String correo, String ultimaSesion, boolean estado, int nivel){
         this.correo = correo;
+        this.ultimaSesion = ultimaSesion;
+        this.estado = estado;
+        this.nivel = nivel;
+    }
+    
+    public Administrador(String correo, String nombre, String ultimaSesion, boolean estado, int nivel, boolean dif){
+        this.correo = correo;
+        this.nombre = nombre;
         this.ultimaSesion = ultimaSesion;
         this.estado = estado;
         this.nivel = nivel;
@@ -47,18 +62,20 @@ public class Administrador {
         List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
         map.put("correo",this.correo);
         map.put("1",this.correo);
-        map.put("ultimaSesion",this.ultimaSesion);
+        map.put("Nombre",this.nombre);
         map.put("2",this.ultimaSesion);
+        map.put("ultimaSesion",this.ultimaSesion);
+        map.put("3",this.ultimaSesion);
         map.put("estado", (estado) ? "true" : "false");
-        map.put("3", (estado) ? "true" : "false");
+        map.put("4", (estado) ? "true" : "false");
         map.put("nivel", String.valueOf(this.nivel));
-        map.put("4", String.valueOf(this.nivel));
+        map.put("5", String.valueOf(this.nivel));
         ret.add(map);
         return ret;
     }
     
     public static String[] getArrayAttributes(){
-        return new String[]{"Correo","Contrasena","Estado","Nivel","UltimaSesion"};
+        return new String[]{"Correo","Nombre","Contrasena","Estado","Nivel","UltimaSesion"};
     }
     
     public Administrador(String correo, String contrasena){
@@ -66,6 +83,14 @@ public class Administrador {
         this.contrasena = contrasena;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
     public String getCorreo() {
         return correo;
     }

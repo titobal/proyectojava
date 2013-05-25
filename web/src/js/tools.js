@@ -82,7 +82,26 @@ var Tools = function(){
     };
     this.printDate = function(d){
         var temp = d.split(" ");
-        return temp[0].split("-").reverse().join('-') + " " + temp[1];
+        var parts = temp[0].split("-");
+        switch(parseInt(parts[1])){
+            case 1:parts[1]="Enero";break;
+            case 2:parts[1]="Febrero";break;
+            case 3:parts[1]="Marzo";break;
+            case 4:parts[1]="Abril";break;
+            case 5:parts[1]="Mayo";break;
+            case 6:parts[1]="Junio";break;
+            case 7:parts[1]="Julio";break;
+            case 8:parts[1]="Agosto";break;
+            case 9:parts[1]="Septiembre";break;
+            case 10:parts[1]="Octubre";break;
+            case 11:parts[1]="Noviembre";break;
+            case 12:parts[1]="Diciembre";break;
+        }
+        return parts.reverse().join('-') + " " + temp[1].substr(0,8);
+    };
+    this.confirm = function(text){
+        $("#confirm").modal("show").find("p").html(text);
+        $("#confirm .true").focus();
     };
 };
 
